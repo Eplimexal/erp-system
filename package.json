@@ -1,43 +1,29 @@
 {
-  "name": "erp",
+  "name": "klu-erp-react-final",
+  "version": "0.0.1",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "chart.js": "^4.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.15.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.36.0",
-    "@types/react": "^19.1.16",
-    "@types/react-dom": "^19.1.9",
-    "@vitejs/plugin-react": "^5.0.4",
+    "@vitejs/plugin-react": "^4.0.0",
     "autoprefixer": "^10.4.21",
-    "eslint": "^9.36.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.22",
-    "globals": "^16.4.0",
     "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.16",
+    "tailwindcss": "^3.4.18",
     "vite": "^7.1.7"
   },
-  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
-  "main": "eslint.config.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Eplimexal/erp-system.git"
-  },
+  "description": "KLU-ERP React (final) Run:   npm install   npm run dev Notes:   - Login page is static (no auth) — submit redirects to dashboard   - data.js and charts.js are reused from the uploaded files (placed in public/js)   - Chart.js is loaded via CDN in index.html",
+  "main": "postcss.config.js",
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Eplimexal/erp-system/issues"
-  },
-  "homepage": "https://github.com/Eplimexal/erp-system#readme"
+  "type": "commonjs"
 }
