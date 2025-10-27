@@ -10,7 +10,7 @@ const links = [
 ]
 export default function Sidebar(){
   return (
-    <aside className="w-64 bg-gradient-to-b from-indigo-600 to-violet-700 text-white p-6">
+    <aside className="w-64 bg-gradient-to-b from-black to-gray-800 text-white p-6">
       <div className="mb-8">
         <div className="text-2xl font-bold">ERP System</div>
         <div className="text-sm opacity-90">Student Portal</div>
