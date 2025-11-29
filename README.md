@@ -44,15 +44,15 @@ Start the development server
 npm run dev
 
 # Folder Structure
-erp-system/ \n
-├── public/ \n
-├── src/ \n
-│   ├── components/ \n
-│   ├── pages/ \n
-│   ├── App.jsx \n
-│   └── main.jsx \n
-├── package.json \n
-└── tailwind.config.js \n
+erp-system/
+├── public/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── App.jsx
+│   └── main.jsx
+├── package.json
+└── tailwind.config.js
 
 # Purpose
 
