@@ -116,7 +116,9 @@ const DEMO_ERP = {
     },
     studentLife: {
       clubsMentored: ["Coding Club", "Research Circle"],
-      upcomingEvents: [{ name: "Project Expo Mentoring", date: "07 Oct 2025" }],
+      upcomingEvents: [
+        { name: "Project Expo Mentoring", date: "07 Oct 2025" },
+      ],
     },
   },
 
@@ -157,6 +159,7 @@ function safeParse(json, fallback) {
 
   DEMO_USERS.forEach((demo) => {
     if (!mergedUsers.some((u) => u.email === demo.email)) {
+      // Only email + password are stored; role is inferred via profile/ERP
       mergedUsers.push({ email: demo.email, password: demo.password });
     }
   });
