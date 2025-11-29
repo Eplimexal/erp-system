@@ -3,9 +3,6 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { getCurrentRole } from "../../seedData";
 
-// ===============================
-// Sidebar Navigation Structure
-// ===============================
 const SECTIONS = [
   {
     id: "overview",
@@ -18,6 +15,7 @@ const SECTIONS = [
     items: [
       { to: "/academics", label: "Courses & Attendance" },
       { to: "/exams", label: "Exams & Results" },
+      { to: "/assignments", label: "Assignments", studentOnly: true }, // ⭐ NEW
     ],
   },
   {
@@ -26,11 +24,7 @@ const SECTIONS = [
     items: [
       { to: "/library", label: "Library" },
       { to: "/studentlife", label: "Student Life" },
-      {
-        to: "/tasks",
-        label: "Tasks / Reminders",
-        studentOnly: true, // only visible for students
-      },
+      { to: "/tasks", label: "Tasks / Reminders", studentOnly: true },
     ],
   },
   {
@@ -46,7 +40,6 @@ const SECTIONS = [
 export default function Sidebar() {
   const role = getCurrentRole();
 
-  // All sections open by default
   const [openSections, setOpenSections] = useState(() =>
     SECTIONS.reduce((acc, s) => {
       acc[s.id] = true;
@@ -55,17 +48,12 @@ export default function Sidebar() {
   );
 
   const toggleSection = (id) => {
-    setOpenSections((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+    setOpenSections((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   return (
     <aside className="sidebar w-64 bg-white border-r border-slate-200 shadow-sm flex flex-col">
-      {/* ---------------------- */}
-      {/* Sidebar Header / Brand */}
-      {/* ---------------------- */}
+      {/* HEADER */}
       <div className="px-4 pt-4 pb-3 border-b border-slate-200">
         <div className="flex items-center gap-3">
           <div className="h-8 w-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-sm font-semibold shadow-sm">
@@ -80,26 +68,23 @@ export default function Sidebar() {
           </div>
         </div>
 
-        <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600 uppercase tracking-wide">
+        <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600 uppercase">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
           <span>{role} mode</span>
         </div>
       </div>
 
-      {/* ---------------------- */}
-      {/* Navigation Items       */}
-      {/* ---------------------- */}
+      {/* NAVIGATION */}
       <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-3">
         {SECTIONS.map((section) => {
           const isOpen = openSections[section.id];
 
           return (
             <div key={section.id} className="text-xs text-slate-500">
-              {/* Section Header */}
               <button
                 type="button"
                 onClick={() => toggleSection(section.id)}
-                className="w-full flex items-center justify-between px-2 py-1.5 rounded-md hover:bg-slate-100 text-[11px] font-semibold tracking-wide uppercase"
+                className="w-full flex items-center justify-between px-2 py-1.5 rounded-md hover:bg-slate-100 text-[11px] font-semibold uppercase"
               >
                 <span>{section.label}</span>
                 <span
@@ -111,11 +96,9 @@ export default function Sidebar() {
                 </span>
               </button>
 
-              {/* Section Items */}
               {isOpen && (
                 <ul className="mt-1 space-y-0.5">
                   {section.items.map((item) => {
-                    // Hide student-only links from non-student users
                     if (item.studentOnly && role !== "student") return null;
 
                     return (
@@ -143,9 +126,7 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* ---------------------- */}
-      {/* Footer                */}
-      {/* ---------------------- */}
+      {/* FOOTER */}
       <div className="px-4 py-3 border-t border-slate-200 text-[10px] text-slate-400">
         <div>KLU ERP · Demo build</div>
         <div className="mt-0.5">Not connected to real campus data.</div>

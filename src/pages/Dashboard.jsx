@@ -143,7 +143,7 @@ export default function Dashboard() {
 
             <h1 className="text-2xl sm:text-3xl font-semibold">
               {isStudent && `Welcome back, ${firstName} 👋`}
-              {isTeacher && `Good to see you, Dr. ${firstName}`}
+              {isTeacher && `Good to see you, ${firstName}`}
               {isAdmin && "ERP Control Center"}
             </h1>
 

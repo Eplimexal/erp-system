@@ -11,27 +11,20 @@ import { FinancePage, PaymentPage } from "./pages/FinanceModule.jsx";
 import { LibraryPage, StudentLifePage } from "./pages/LibraryModule.jsx";
 import Profile from "./pages/Profile.jsx";
 import Login from "./pages/Login.jsx";
-
-// ⭐ NEW — Tasks CRUD Page
 import TasksPage from "./pages/Tasks.jsx";
+import AssignmentsPage from "./pages/Assignments.jsx"; // ⭐ NEW
 
 // Helpers
 import { getCurrentUserEmail, getCurrentRole } from "./seedData.js";
 
-
-// ==========================================================
-// PROTECTED ROUTE WRAPPER
-// ==========================================================
 function ProtectedRoute({ children, allowed }) {
   const loggedIn = localStorage.getItem("loggedIn") === "true";
   const currentEmail = getCurrentUserEmail();
 
-  // Not logged in → redirect to login
   if (!loggedIn || !currentEmail) {
     return <Navigate to="/login" replace />;
   }
 
-  // If allowed roles are specified → enforce role check
   if (allowed && allowed.length > 0) {
     const role = getCurrentRole();
     if (!allowed.includes(role)) {
@@ -42,23 +35,13 @@ function ProtectedRoute({ children, allowed }) {
   return children;
 }
 
-
-// ==========================================================
-// ROLE-AWARE DASHBOARD WRAPPER
-// (Currently: student, teacher, admin all use same Dashboard)
-// ==========================================================
 function RoleDashboard() {
   return <Dashboard />;
 }
 
-
-// ==========================================================
-// MAIN APP ROUTES
-// ==========================================================
 export default function App() {
   return (
     <Routes>
-      {/* PUBLIC ROUTE */}
       <Route path="/login" element={<Login />} />
 
       {/* DASHBOARD */}
@@ -73,7 +56,7 @@ export default function App() {
         }
       />
 
-      {/* ACADEMICS */}
+      {/* ACADEMICS MODULE */}
       <Route
         path="/academics"
         element={
@@ -91,6 +74,53 @@ export default function App() {
           <ProtectedRoute allowed={["student", "teacher"]}>
             <MainLayout>
               <ExamsPage />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ⭐ NEW — ASSIGNMENTS */}
+      <Route
+        path="/assignments"
+        element={
+          <ProtectedRoute allowed={["student"]}>
+            <MainLayout>
+              <AssignmentsPage />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* CAMPUS */}
+      <Route
+        path="/library"
+        element={
+          <ProtectedRoute allowed={["student", "teacher"]}>
+            <MainLayout>
+              <LibraryPage />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/studentlife"
+        element={
+          <ProtectedRoute allowed={["student", "teacher"]}>
+            <MainLayout>
+              <StudentLifePage />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* TASKS */}
+      <Route
+        path="/tasks"
+        element={
+          <ProtectedRoute allowed={["student"]}>
+            <MainLayout>
+              <TasksPage />
             </MainLayout>
           </ProtectedRoute>
         }
@@ -119,41 +149,6 @@ export default function App() {
         }
       />
 
-      {/* CAMPUS MODULE */}
-      <Route
-        path="/library"
-        element={
-          <ProtectedRoute allowed={["student", "teacher"]}>
-            <MainLayout>
-              <LibraryPage />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/studentlife"
-        element={
-          <ProtectedRoute allowed={["student", "teacher"]}>
-            <MainLayout>
-              <StudentLifePage />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
-
-      {/* ⭐ NEW — TASKS CRUD MODULE */}
-      <Route
-        path="/tasks"
-        element={
-          <ProtectedRoute allowed={["student"]}>
-            <MainLayout>
-              <TasksPage />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
-
       {/* PROFILE */}
       <Route
         path="/profile"
@@ -166,7 +161,6 @@ export default function App() {
         }
       />
 
-      {/* FALLBACK */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
