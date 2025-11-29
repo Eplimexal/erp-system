@@ -2,11 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom */
-:root{
+/* Custom CSS variables */
+:root {
   --primary: #4f46e5;
   --accent: #06b6d4;
 }
-body { @apply bg-gradient-to-br from-slate-50 to-white; }
-.card { @apply bg-white rounded-xl shadow p-4; }
-.sidebar { min-height: 100vh; }
+
+/* Soft background */
+body {
+  @apply bg-gradient-to-br from-slate-50 to-white text-gray-800;
+}
+
+/* Reusable card style with hover lift effect */
+.card {
+  @apply bg-white rounded-xl shadow p-4 transform transition-transform duration-300 hover:-translate-y-1 hover:shadow-xl;
+}
+
+/* Sidebar full height */
+.sidebar {
+  min-height: 100vh;
+}
+
+/* Simple keyframe animations for smooth entrance */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.45s ease-out both;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.45s ease-out both;
+}

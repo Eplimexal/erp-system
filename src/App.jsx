@@ -1,23 +1,75 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import MainLayout from "./components/layout/MainLayout";
-import Dashboard from "./pages/Dashboard";
-import Academics from "./pages/Academics";
-import Finance from "./pages/Finance";
-import Exams from "./pages/Exams";
-import Library from "./pages/Library";
-import StudentLife from "./pages/StudentLife";
-import Payment from "./pages/Payment";   // ✅ import Payment page
-import Login from "./pages/Login";
+import MainLayout from "./components/layout/MainLayout.jsx";
 
-function ProtectedRoute({ children }) {
+import Dashboard from "./pages/Dashboard.jsx";
+
+// IMPORT MERGED MODULES
+import { AcademicsPage, ExamsPage } from "./pages/AcademicsModule.jsx";
+import { FinancePage, PaymentPage } from "./pages/FinanceModule.jsx";
+import { LibraryPage, StudentLifePage } from "./pages/LibraryModule.jsx";
+
+import Login from "./pages/Login.jsx";
+import Profile from "./pages/Profile.jsx";
+
+import { getCurrentUserEmail, getCurrentRole } from "./seedData.js";
+
+// ============================
+// PROTECTED ROUTE
+// ============================
+function ProtectedRoute({ children, allowed }) {
   const loggedIn = localStorage.getItem("loggedIn") === "true";
-  return loggedIn ? children : <Navigate to="/login" replace />;
+  const currentEmail = getCurrentUserEmail();
+
+  if (!loggedIn || !currentEmail) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (allowed && allowed.length > 0) {
+    const role = getCurrentRole();
+    if (!allowed.includes(role)) {
+      return <Navigate to="/" replace />;
+    }
+  }
+
+  return children;
+}
+
+// ============================
+// ROLE-AWARE DASHBOARD
+// ============================
+function RoleDashboard() {
+  const role = getCurrentRole();
+
+  if (role === "teacher") {
+    return (
+      <div className="p-6">
+        <h2 className="text-2xl font-bold mb-2">Teacher Dashboard</h2>
+        <p className="text-sm text-gray-600">
+          Placeholder for teacher dashboard.
+        </p>
+      </div>
+    );
+  }
+
+  if (role === "admin") {
+    return (
+      <div className="p-6">
+        <h2 className="text-2xl font-bold mb-2">Admin Dashboard</h2>
+        <p className="text-sm text-gray-600">
+          Placeholder for admin dashboard.
+        </p>
+      </div>
+    );
+  }
+
+  return <Dashboard />;
 }
 
 export default function App() {
   return (
     <Routes>
+      {/* Public */}
       <Route path="/login" element={<Login />} />
 
       {/* Dashboard */}
@@ -26,79 +78,88 @@ export default function App() {
         element={
           <ProtectedRoute>
             <MainLayout>
-              <Dashboard />
+              <RoleDashboard />
             </MainLayout>
           </ProtectedRoute>
         }
       />
 
-      {/* Academics */}
+      {/* Academics Module */}
       <Route
         path="/academics"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowed={["student"]}>
             <MainLayout>
-              <Academics />
+              <AcademicsPage />
             </MainLayout>
           </ProtectedRoute>
         }
       />
 
-      {/* Finance */}
+      <Route
+        path="/exams"
+        element={
+          <ProtectedRoute allowed={["student"]}>
+            <MainLayout>
+              <ExamsPage />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Finance Module */}
       <Route
         path="/finance"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowed={["student"]}>
             <MainLayout>
-              <Finance />
+              <FinancePage />
             </MainLayout>
           </ProtectedRoute>
         }
       />
 
-      {/* ✅ Payment */}
       <Route
         path="/payment"
         element={
           <ProtectedRoute>
             <MainLayout>
-              <Payment />
+              <PaymentPage />
             </MainLayout>
           </ProtectedRoute>
         }
       />
 
-      {/* Exams */}
-      <Route
-        path="/exams"
-        element={
-          <ProtectedRoute>
-            <MainLayout>
-              <Exams />
-            </MainLayout>
-          </ProtectedRoute>
-        }
-      />
-
-      {/* Library */}
+      {/* Library Module */}
       <Route
         path="/library"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowed={["student"]}>
             <MainLayout>
-              <Library />
+              <LibraryPage />
             </MainLayout>
           </ProtectedRoute>
         }
       />
 
-      {/* Student Life */}
       <Route
         path="/studentlife"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowed={["student"]}>
             <MainLayout>
-              <StudentLife />
+              <StudentLifePage />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Profile */}
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute allowed={["student", "teacher", "admin"]}>
+            <MainLayout>
+              <Profile />
             </MainLayout>
           </ProtectedRoute>
         }
