@@ -12,7 +12,8 @@ import { LibraryPage, StudentLifePage } from "./pages/LibraryModule.jsx";
 import Profile from "./pages/Profile.jsx";
 import Login from "./pages/Login.jsx";
 import TasksPage from "./pages/Tasks.jsx";
-import AssignmentsPage from "./pages/Assignments.jsx"; // ⭐ NEW
+import AssignmentsPage from "./pages/Assignments.jsx";
+import TimetablePage from "./pages/Timetable.jsx"; // ⭐ NEW
 
 // Helpers
 import { getCurrentUserEmail, getCurrentRole } from "./seedData.js";
@@ -21,15 +22,11 @@ function ProtectedRoute({ children, allowed }) {
   const loggedIn = localStorage.getItem("loggedIn") === "true";
   const currentEmail = getCurrentUserEmail();
 
-  if (!loggedIn || !currentEmail) {
-    return <Navigate to="/login" replace />;
-  }
+  if (!loggedIn || !currentEmail) return <Navigate to="/login" replace />;
 
-  if (allowed && allowed.length > 0) {
+  if (allowed?.length) {
     const role = getCurrentRole();
-    if (!allowed.includes(role)) {
-      return <Navigate to="/" replace />;
-    }
+    if (!allowed.includes(role)) return <Navigate to="/" replace />;
   }
 
   return children;
@@ -44,7 +41,7 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
 
-      {/* DASHBOARD */}
+      {/* Dashboard */}
       <Route
         path="/"
         element={
@@ -56,7 +53,7 @@ export default function App() {
         }
       />
 
-      {/* ACADEMICS MODULE */}
+      {/* Academics */}
       <Route
         path="/academics"
         element={
@@ -67,7 +64,6 @@ export default function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/exams"
         element={
@@ -79,7 +75,19 @@ export default function App() {
         }
       />
 
-      {/* ⭐ NEW — ASSIGNMENTS */}
+      {/* ⭐ NEW TIMETABLE ROUTE */}
+      <Route
+        path="/timetable"
+        element={
+          <ProtectedRoute allowed={["student"]}>
+            <MainLayout>
+              <TimetablePage />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Assignments */}
       <Route
         path="/assignments"
         element={
@@ -91,7 +99,7 @@ export default function App() {
         }
       />
 
-      {/* CAMPUS */}
+      {/* Campus */}
       <Route
         path="/library"
         element={
@@ -102,7 +110,6 @@ export default function App() {
           </ProtectedRoute>
         }
       />
-
       <Route
         path="/studentlife"
         element={
@@ -114,7 +121,7 @@ export default function App() {
         }
       />
 
-      {/* TASKS */}
+      {/* Tasks */}
       <Route
         path="/tasks"
         element={
@@ -126,7 +133,7 @@ export default function App() {
         }
       />
 
-      {/* FINANCE */}
+      {/* Finance */}
       <Route
         path="/finance"
         element={
@@ -149,7 +156,7 @@ export default function App() {
         }
       />
 
-      {/* PROFILE */}
+      {/* Profile */}
       <Route
         path="/profile"
         element={
@@ -161,6 +168,7 @@ export default function App() {
         }
       />
 
+      {/* fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

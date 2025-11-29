@@ -15,7 +15,8 @@ const SECTIONS = [
     items: [
       { to: "/academics", label: "Courses & Attendance" },
       { to: "/exams", label: "Exams & Results" },
-      { to: "/assignments", label: "Assignments", studentOnly: true }, // ⭐ NEW
+      { to: "/assignments", label: "Assignments", studentOnly: true },
+      { to: "/timetable", label: "Timetable", studentOnly: true }, // ⭐ NEW
     ],
   },
   {
@@ -39,7 +40,6 @@ const SECTIONS = [
 
 export default function Sidebar() {
   const role = getCurrentRole();
-
   const [openSections, setOpenSections] = useState(() =>
     SECTIONS.reduce((acc, s) => {
       acc[s.id] = true;
@@ -47,13 +47,9 @@ export default function Sidebar() {
     }, {})
   );
 
-  const toggleSection = (id) => {
-    setOpenSections((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
-
   return (
     <aside className="sidebar w-64 bg-white border-r border-slate-200 shadow-sm flex flex-col">
-      {/* HEADER */}
+      {/* Header */}
       <div className="px-4 pt-4 pb-3 border-b border-slate-200">
         <div className="flex items-center gap-3">
           <div className="h-8 w-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-sm font-semibold shadow-sm">
@@ -61,9 +57,7 @@ export default function Sidebar() {
           </div>
 
           <div>
-            <div className="text-sm font-semibold text-slate-900">
-              KLU ERP System
-            </div>
+            <div className="text-sm font-semibold text-slate-900">KLU ERP System</div>
             <div className="text-[11px] text-slate-500">Web demo instance</div>
           </div>
         </div>
@@ -74,28 +68,28 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* NAVIGATION */}
+      {/* Navigation */}
       <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-3">
         {SECTIONS.map((section) => {
           const isOpen = openSections[section.id];
 
           return (
             <div key={section.id} className="text-xs text-slate-500">
+              {/* Section Title */}
               <button
                 type="button"
-                onClick={() => toggleSection(section.id)}
+                onClick={() =>
+                  setOpenSections((prev) => ({ ...prev, [section.id]: !prev[section.id] }))
+                }
                 className="w-full flex items-center justify-between px-2 py-1.5 rounded-md hover:bg-slate-100 text-[11px] font-semibold uppercase"
               >
                 <span>{section.label}</span>
-                <span
-                  className={`transition-transform text-slate-400 ${
-                    isOpen ? "rotate-0" : "-rotate-90"
-                  }`}
-                >
+                <span className={`transition-transform text-slate-400 ${isOpen ? "" : "-rotate-90"}`}>
                   ▾
                 </span>
               </button>
 
+              {/* Items */}
               {isOpen && (
                 <ul className="mt-1 space-y-0.5">
                   {section.items.map((item) => {
@@ -126,7 +120,7 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* FOOTER */}
+      {/* Footer */}
       <div className="px-4 py-3 border-t border-slate-200 text-[10px] text-slate-400">
         <div>KLU ERP · Demo build</div>
         <div className="mt-0.5">Not connected to real campus data.</div>
