@@ -7,15 +7,54 @@ import Finance from "./pages/Finance";
 import Exams from "./pages/Exams";
 import Library from "./pages/Library";
 import StudentLife from "./pages/StudentLife";
-import Payment from "./pages/Payment";   // ✅ import Payment page
+import Payment from "./pages/Payment";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 
-function ProtectedRoute({ children }) {
+// ============================
+// ROLE HELPERS
+// ============================
+function getCurrentUser() {
+  try {
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const email =
+      sessionStorage.getItem("currentUser") ||
+      localStorage.getItem("currentUser");
+    if (!email) return null;
+    return users.find(u => u.email === email) || null;
+  } catch {
+    return null;
+  }
+}
+
+function ProtectedRoute({ children, allowed }) {
   const loggedIn = localStorage.getItem("loggedIn") === "true";
-  return loggedIn ? children : <Navigate to="/login" replace />;
+
+  if (!loggedIn) return <Navigate to="/login" replace />;
+
+  const user = getCurrentUser();
+  if (!user) return <Navigate to="/login" replace />;
+
+  // If allowed roles are specified, enforce them
+  if (allowed && !allowed.includes(user.role)) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
 }
 
 export default function App() {
+  function RoleDashboard() {
+  const user = getCurrentUser();
+
+  if (!user) return null;
+
+  if (user.role === "teacher") return <div>Teacher Dashboard (Phase 3)</div>;
+  if (user.role === "admin")   return <div>Admin Dashboard (Phase 3)</div>;
+
+  return <Dashboard />; // default student dashboard
+}
+
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
@@ -36,7 +75,7 @@ export default function App() {
       <Route
         path="/academics"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowed={["student"]}>
             <MainLayout>
               <Academics />
             </MainLayout>
@@ -48,15 +87,15 @@ export default function App() {
       <Route
         path="/finance"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowed={["student"]}>
             <MainLayout>
               <Finance />
-            </MainLayout>
+           </MainLayout>
           </ProtectedRoute>
         }
       />
 
-      {/* ✅ Payment */}
+      {/* Payment */}
       <Route
         path="/payment"
         element={
@@ -72,9 +111,9 @@ export default function App() {
       <Route
         path="/exams"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowed={["student"]}>
             <MainLayout>
-              <Exams />
+             <Exams />
             </MainLayout>
           </ProtectedRoute>
         }
@@ -84,7 +123,7 @@ export default function App() {
       <Route
         path="/library"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowed={["student"]}>
             <MainLayout>
               <Library />
             </MainLayout>
@@ -96,9 +135,43 @@ export default function App() {
       <Route
         path="/studentlife"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowed={["student"]}>
             <MainLayout>
               <StudentLife />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Profile */}
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute allowed={["student", "teacher", "admin"]}>
+            <MainLayout>
+              <Profile />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
+
+      <Route
+        path="/teacher/classes"
+        element={
+          <ProtectedRoute allowed={["teacher"]}>
+            <MainLayout>
+              <div>Teacher Classes (Phase 3)</div>
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          <ProtectedRoute allowed={["admin"]}>
+            <MainLayout>
+              <div>Admin User Management (Phase 3)</div>
             </MainLayout>
           </ProtectedRoute>
         }
