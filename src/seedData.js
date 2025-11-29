@@ -21,15 +21,15 @@ function generateAttendanceHistory() {
     d.setDate(today.getDate() - i);
     out.push({
       date: d.toISOString().split("T")[0],
-      present: Math.random() > 0.1, // 90% attendance
-      percentage: Math.floor(Math.random() * 10) + 90, // 90–100%
+      present: Math.random() > 0.1,
+      percentage: Math.floor(Math.random() * 10) + 90,
     });
   }
   return out.reverse();
 }
 
 // =======================================================
-//  DEMO USERS (login credentials)
+// DEMO USERS
 // =======================================================
 const DEMO_USERS = [
   { email: "student@klu.edu", password: "student123", role: "student" },
@@ -38,7 +38,7 @@ const DEMO_USERS = [
 ];
 
 // =======================================================
-//  PROFILE DATA — Expanded metadata for all accounts
+// PROFILE DATA
 // =======================================================
 const DEMO_PROFILES = {
   "student@klu.edu": {
@@ -79,12 +79,11 @@ const DEMO_PROFILES = {
 };
 
 // =======================================================
-//  MAIN ERP DATA (Student, Teacher, Admin)
+// MAIN ERP DATA
+// Adds "tasks" for student (CRUD target)
 // =======================================================
 const DEMO_ERP = {
-  // =====================================================
-  // STUDENT ERP
-  // =====================================================
+  // ----------------------- STUDENT -----------------------
   "student@klu.edu": {
     role: "student",
 
@@ -92,11 +91,7 @@ const DEMO_ERP = {
       semester: "IV - CSE",
       gpa: 8.7,
       overallAttendance: 93,
-
-      // 6-semester CGPA history (chart-ready)
       gpaTrend: [8.0, 8.2, 8.4, 8.6, 8.7, 8.8],
-
-      // 8 Subjects
       courses: [
         {
           code: "CSE301",
@@ -154,37 +149,7 @@ const DEMO_ERP = {
             final: 73,
           },
         },
-        {
-          code: "CSE309",
-          name: "Web Technologies",
-          faculty: "Mr. Aditya",
-          credits: 3,
-          attendance: 91,
-          marks: {
-            mid1: 29,
-            mid2: 28,
-            assignments: [10, 10],
-            quiz: 10,
-            final: 85,
-          },
-        },
-        {
-          code: "CSE311",
-          name: "AI & ML Foundations",
-          faculty: "Dr. Lavanya",
-          credits: 3,
-          attendance: 90,
-          marks: {
-            mid1: 24,
-            mid2: 23,
-            assignments: [9, 8],
-            quiz: 7,
-            final: 70,
-          },
-        },
       ],
-
-      // Attendance timeline for 90 days
       attendanceHistory: generateAttendanceHistory(),
     },
 
@@ -195,8 +160,6 @@ const DEMO_ERP = {
       scholarship: "Merit Scholarship (25% tuition waiver)",
       lastPaymentDate: "10 Jan 2025",
       nextDueDate: "15 Mar 2025",
-
-      // Fee breakup
       feeBreakup: {
         tuition: 95000,
         hostel: 25000,
@@ -204,15 +167,11 @@ const DEMO_ERP = {
         lab: 5000,
         exam: 5000,
       },
-
-      // Installments (chart-ready)
       installments: [
         { label: "Installment 1", amount: 45000, paid: true },
         { label: "Installment 2", amount: 45000, paid: true },
         { label: "Installment 3", amount: 45000, paid: false },
       ],
-
-      // Payment history
       payments: [
         { id: "TXN-001", amount: 45000, date: "2025-01-10" },
         { id: "TXN-002", amount: 45000, date: "2024-10-10" },
@@ -226,24 +185,21 @@ const DEMO_ERP = {
         { title: "Design Patterns", due: "2025-03-01" },
       ],
       ebooksCount: 22,
-
-      // Borrow history
       history: [
         "Clean Code",
         "Machine Learning Basics",
         "System Design Primer",
         "Advanced DBMS Concepts",
-        "Operating Systems Internals",
-        "React.js Guide",
-        "Python Deep Dive",
-        "Linux Kernel Notes",
-        "AI for Engineers",
-        "Competitive Programming Handbook",
       ],
     },
 
     studentLife: {
-      clubs: ["Coding Club", "Robotics Club", "Drama Club", "Cybersecurity Cell"],
+      clubs: [
+        "Coding Club",
+        "Robotics Club",
+        "Drama Club",
+        "Cybersecurity Cell",
+      ],
       achievements: [
         "Won 2nd place in Hackathon 2024",
         "Published ML research poster",
@@ -257,14 +213,18 @@ const DEMO_ERP = {
         { name: "Ethical Hacking Basics", date: "2025-02-10" },
       ],
     },
+
+    // ⭐ NEW: PERSONAL TASKS (initial seed)
+    tasks: [
+      { id: 1, title: "Finish OS Assignment", done: false },
+      { id: 2, title: "Prepare for DBMS quiz", done: true },
+      { id: 3, title: "Buy record notebook", done: false },
+    ],
   },
 
-  // =====================================================
-  // TEACHER ERP
-  // =====================================================
+  // ----------------------- TEACHER -----------------------
   "teacher@klu.edu": {
     role: "teacher",
-
     academics: {
       coursesHandled: [
         {
@@ -279,66 +239,36 @@ const DEMO_ERP = {
           students: 48,
           attendanceTrend: genRange(12, 70, 93),
         },
-        {
-          code: "CSE305",
-          name: "Advanced Algorithms",
-          students: 50,
-          attendanceTrend: genRange(12, 80, 96),
-        },
       ],
-
       pendingEvaluations: 5,
-
-      // Student grade distribution per batch
-      gradeDistribution: {
-        A: 32,
-        B: 41,
-        C: 18,
-        D: 5,
-        F: 2,
-      },
+      gradeDistribution: { A: 32, B: 41, C: 18, D: 5, F: 2 },
     },
 
     finance: {
       total: 0,
       paid: 0,
       pending: 0,
-      note: "Salary is processed via monthly payroll.",
-      salaryHistory: [
-        { month: "Jan", amount: 78000 },
-        { month: "Dec", amount: 78000 },
-        { month: "Nov", amount: 78000 },
-      ],
+      note: "Salary processed monthly.",
     },
 
     library: {
       borrowed: [{ title: "Research in Algorithms", due: "2025-03-12" }],
       ebooksCount: 42,
-      researchPapers: [
-        "Neural Compression Techniques",
-        "Graph Models in ML Systems",
-        "Optimizing Hash-based Indexing",
-      ],
     },
 
     studentLife: {
       clubsMentored: ["Coding Club", "Research Circle", "AI Innovation Hub"],
-      upcomingEvents: [{ name: "Research Expo", date: "2025-03-15" }],
     },
   },
 
-  // =====================================================
-  // ADMIN ERP
-  // =====================================================
+  // ----------------------- ADMIN -----------------------
   "admin@klu.edu": {
     role: "admin",
-
     overview: {
       totalStudents: 1450,
       totalTeachers: 112,
       activeCourses: 82,
     },
-
     academics: {
       averageGPA: 8.14,
       averageAttendance: 88,
@@ -349,25 +279,17 @@ const DEMO_ERP = {
         CIVIL: 80,
       },
     },
-
     finance: {
       totalCollected: 82000000,
       totalPending: 14000000,
       scholarshipsCount: 360,
-      revenueTrend: genRange(12, 55, 90),
     },
-
-    systemLogs: [
-      "User login spike detected",
-      "Backup completed",
-      "New device registered",
-      "Fee payment portal updated",
-    ],
+    systemLogs: ["Backup completed", "Fee portal updated", "New login detected"],
   },
 };
 
 // =======================================================
-//  SAFE PARSE
+// SAFE PARSE
 // =======================================================
 function safeParse(json, fallback) {
   try {
@@ -378,30 +300,28 @@ function safeParse(json, fallback) {
 }
 
 // =======================================================
-//  AUTO-SEED
+// AUTO-SEED
 // =======================================================
 (function seed() {
   if (typeof window === "undefined") return;
   if (localStorage.getItem("demoSeeded") === "true") return;
 
-  // Seed users
+  // Users
   const existingUsers = safeParse(localStorage.getItem("users"), []);
   const mergedUsers = [...existingUsers];
-
-  DEMO_USERS.forEach((demo) => {
-    if (!mergedUsers.some((u) => u.email === demo.email)) {
-      mergedUsers.push({ email: demo.email, password: demo.password });
+  DEMO_USERS.forEach((u) => {
+    if (!mergedUsers.some((x) => x.email === u.email)) {
+      mergedUsers.push({ email: u.email, password: u.password });
     }
   });
-
   localStorage.setItem("users", JSON.stringify(mergedUsers));
 
-  // Seed profiles
+  // Profiles
   const existingProfiles = safeParse(localStorage.getItem("profiles"), {});
   const mergedProfiles = { ...DEMO_PROFILES, ...existingProfiles };
   localStorage.setItem("profiles", JSON.stringify(mergedProfiles));
 
-  // Seed ERP data
+  // ERP data
   const existingErp = safeParse(localStorage.getItem("erpData"), {});
   const mergedErp = { ...DEMO_ERP, ...existingErp };
   localStorage.setItem("erpData", JSON.stringify(mergedErp));
@@ -410,7 +330,7 @@ function safeParse(json, fallback) {
 })();
 
 // =======================================================
-//  EXPORT HELPERS
+// EXPORT HELPERS
 // =======================================================
 export function getCurrentUserEmail() {
   if (typeof window === "undefined") return "";
@@ -423,14 +343,12 @@ export function getCurrentUserEmail() {
 
 export function getCurrentProfile() {
   const email = getCurrentUserEmail();
-  if (!email) return null;
   const profiles = safeParse(localStorage.getItem("profiles"), {});
   return profiles[email] || null;
 }
 
 export function getCurrentErpData() {
   const email = getCurrentUserEmail();
-  if (!email) return null;
   const erp = safeParse(localStorage.getItem("erpData"), {});
   return erp[email] || null;
 }
@@ -438,7 +356,27 @@ export function getCurrentErpData() {
 export function getCurrentRole() {
   const profile = getCurrentProfile();
   if (profile?.role) return profile.role;
+
   const erp = getCurrentErpData();
   if (erp?.role) return erp.role;
+
   return "student";
+}
+
+// =======================================================
+// ⭐ NEW TASK HELPERS (CRUD uses these)
+// =======================================================
+export function getTasks() {
+  const email = getCurrentUserEmail();
+  const erp = safeParse(localStorage.getItem("erpData"), {});
+  return erp[email]?.tasks || [];
+}
+
+export function saveTasks(newTasks) {
+  const email = getCurrentUserEmail();
+  const erp = safeParse(localStorage.getItem("erpData"), {});
+  if (!erp[email]) return;
+
+  erp[email].tasks = newTasks;
+  localStorage.setItem("erpData", JSON.stringify(erp));
 }

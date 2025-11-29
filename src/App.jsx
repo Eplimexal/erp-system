@@ -5,7 +5,6 @@ import MainLayout from "./components/layout/MainLayout.jsx";
 
 import Dashboard from "./pages/Dashboard.jsx";
 
-// IMPORT MERGED MODULES
 import { AcademicsPage, ExamsPage } from "./pages/AcademicsModule.jsx";
 import { FinancePage, PaymentPage } from "./pages/FinanceModule.jsx";
 import { LibraryPage, StudentLifePage } from "./pages/LibraryModule.jsx";
@@ -13,11 +12,11 @@ import { LibraryPage, StudentLifePage } from "./pages/LibraryModule.jsx";
 import Login from "./pages/Login.jsx";
 import Profile from "./pages/Profile.jsx";
 
+// ⭐ NEW IMPORT
+import TasksPage from "./pages/Tasks.jsx";
+
 import { getCurrentUserEmail, getCurrentRole } from "./seedData.js";
 
-// ============================
-// PROTECTED ROUTE
-// ============================
 function ProtectedRoute({ children, allowed }) {
   const loggedIn = localStorage.getItem("loggedIn") === "true";
   const currentEmail = getCurrentUserEmail();
@@ -36,44 +35,16 @@ function ProtectedRoute({ children, allowed }) {
   return children;
 }
 
-// ============================
-// ROLE-AWARE DASHBOARD
-// ============================
 function RoleDashboard() {
   const role = getCurrentRole();
-
-  if (role === "teacher") {
-    return (
-      <div className="p-6">
-        <h2 className="text-2xl font-bold mb-2">Teacher Dashboard</h2>
-        <p className="text-sm text-gray-600">
-          Placeholder for teacher dashboard.
-        </p>
-      </div>
-    );
-  }
-
-  if (role === "admin") {
-    return (
-      <div className="p-6">
-        <h2 className="text-2xl font-bold mb-2">Admin Dashboard</h2>
-        <p className="text-sm text-gray-600">
-          Placeholder for admin dashboard.
-        </p>
-      </div>
-    );
-  }
-
   return <Dashboard />;
 }
 
 export default function App() {
   return (
     <Routes>
-      {/* Public */}
       <Route path="/login" element={<Login />} />
 
-      {/* Dashboard */}
       <Route
         path="/"
         element={
@@ -85,7 +56,6 @@ export default function App() {
         }
       />
 
-      {/* Academics Module */}
       <Route
         path="/academics"
         element={
@@ -108,7 +78,6 @@ export default function App() {
         }
       />
 
-      {/* Finance Module */}
       <Route
         path="/finance"
         element={
@@ -131,7 +100,6 @@ export default function App() {
         }
       />
 
-      {/* Library Module */}
       <Route
         path="/library"
         element={
@@ -154,7 +122,18 @@ export default function App() {
         }
       />
 
-      {/* Profile */}
+      {/* ⭐ NEW TASKS ROUTE */}
+      <Route
+        path="/tasks"
+        element={
+          <ProtectedRoute allowed={["student"]}>
+            <MainLayout>
+              <TasksPage />
+            </MainLayout>
+          </ProtectedRoute>
+        }
+      />
+
       <Route
         path="/profile"
         element={
@@ -166,7 +145,6 @@ export default function App() {
         }
       />
 
-      {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
