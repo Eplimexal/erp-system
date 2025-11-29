@@ -78,73 +78,90 @@ export default function Login() {
   const useDemo = (demoEmail, demoPassword) => {
     setEmail(demoEmail);
     setPassword(demoPassword);
-    setMessage(`Filled demo account: ${demoEmail}`);
+    setMessage(`Auto-filled demo account: ${demoEmail}`);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-500 to-pink-500 p-6">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 space-y-6 animate-fade-in-up">
+    <div className="min-h-screen flex items-center justify-center 
+      bg-gradient-to-br from-indigo-600 via-sky-500 to-emerald-500 p-4">
+
+      {/* GLASS CARD */}
+      <div className="w-full max-w-md backdrop-blur-xl bg-white/20 
+        border border-white/30 shadow-2xl rounded-2xl p-8 space-y-6 animate-fade-in-up">
+
+        {/* HEADER */}
         <div className="text-center">
-          <h2 className="text-2xl font-bold mb-1 text-gray-800">
-            KLU ERP {mode === "login" ? "Login" : "Sign Up"}
+          <h2 className="text-3xl font-bold text-white drop-shadow-md">
+            KLU ERP Portal
           </h2>
-          <p className="text-xs text-gray-500">
-            Demo portal – use your own account or a demo one below
+          <p className="text-indigo-100 text-sm mt-1">
+            {mode === "login" 
+              ? "Login with your account or use a demo account"
+              : "Create a new student account"}
           </p>
         </div>
 
+        {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
+            className="w-full px-4 py-3 rounded-lg bg-white/70 shadow-sm 
+              focus:outline-none focus:ring-2 focus:ring-sky-400 text-gray-700"
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
+            className="w-full px-4 py-3 rounded-lg bg-white/70 shadow-sm
+              focus:outline-none focus:ring-2 focus:ring-sky-400 text-gray-700"
           />
 
           {message && (
-            <p className="text-sm text-center text-red-500">{message}</p>
+            <p className="text-sm text-center text-rose-500">{message}</p>
           )}
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition-transform duration-200 hover:-translate-y-0.5"
+            className="w-full py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 
+              text-white font-semibold shadow-lg transition-transform 
+              duration-200 hover:-translate-y-0.5"
           >
             {mode === "login" ? "Login" : "Create Account"}
           </button>
         </form>
 
-        {/* Demo accounts block */}
-        <div className="mt-2 bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-sm text-gray-700 space-y-2">
-          <p className="font-semibold">Quick demo accounts</p>
+        {/* DEMO ACCOUNTS */}
+        <div className="bg-white/10 backdrop-blur-xl border border-white/20 
+          rounded-xl p-4 text-sm text-white space-y-3">
+          <p className="font-semibold opacity-90">Quick Demo Accounts</p>
+
           <div className="grid grid-cols-1 gap-2">
             <button
-              type="button"
               onClick={() => useDemo("student@klu.edu", "student123")}
-              className="w-full px-3 py-2 rounded-lg bg-white hover:bg-indigo-100 border border-indigo-100 flex items-center justify-between text-xs"
+              className="w-full px-3 py-2 rounded-lg bg-white/20 hover:bg-white/30 
+                border border-white/30 flex justify-between text-xs text-white"
             >
               <span>Student · student@klu.edu</span>
               <span className="font-mono">student123</span>
             </button>
+
             <button
-              type="button"
               onClick={() => useDemo("teacher@klu.edu", "teacher123")}
-              className="w-full px-3 py-2 rounded-lg bg-white hover:bg-indigo-100 border border-indigo-100 flex items-center justify-between text-xs"
+              className="w-full px-3 py-2 rounded-lg bg-white/20 hover:bg-white/30 
+                border border-white/30 flex justify-between text-xs text-white"
             >
               <span>Teacher · teacher@klu.edu</span>
               <span className="font-mono">teacher123</span>
             </button>
+
             <button
-              type="button"
               onClick={() => useDemo("admin@klu.edu", "admin123")}
-              className="w-full px-3 py-2 rounded-lg bg-white hover:bg-indigo-100 border border-indigo-100 flex items-center justify-between text-xs"
+              className="w-full px-3 py-2 rounded-lg bg-white/20 hover:bg-white/30
+                border border-white/30 flex justify-between text-xs text-white"
             >
               <span>Admin · admin@klu.edu</span>
               <span className="font-mono">admin123</span>
@@ -152,31 +169,30 @@ export default function Login() {
           </div>
         </div>
 
-        <div className="mt-2 text-center text-sm text-gray-600">
+        {/* MODE SWITCH */}
+        <div className="text-center text-sm text-white/80">
           {mode === "login" ? (
             <>
-              Don&apos;t have an account?{" "}
+              Don’t have an account?{" "}
               <button
-                type="button"
                 onClick={() => {
                   setMode("signup");
                   setMessage("");
                 }}
-                className="text-indigo-600 hover:underline font-medium"
+                className="text-white underline underline-offset-2 hover:opacity-80"
               >
                 Sign up
               </button>
             </>
           ) : (
             <>
-              Already have an account?{" "}
+              Already registered?{" "}
               <button
-                type="button"
                 onClick={() => {
                   setMode("login");
                   setMessage("");
                 }}
-                className="text-indigo-600 hover:underline font-medium"
+                className="text-white underline underline-offset-2 hover:opacity-80"
               >
                 Login
               </button>
