@@ -43,7 +43,8 @@ Start the development server
 
 npm run dev
 
-# Folder Structure
+### Folder Structure
+```
 erp-system/
 ├── public/
 ├── src/
@@ -53,6 +54,7 @@ erp-system/
 │   └── main.jsx
 ├── package.json
 └── tailwind.config.js
+```
 
 # Purpose
 
