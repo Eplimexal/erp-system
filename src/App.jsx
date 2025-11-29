@@ -1,30 +1,37 @@
 // src/App.jsx
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+
 import MainLayout from "./components/layout/MainLayout.jsx";
 
+// Pages
 import Dashboard from "./pages/Dashboard.jsx";
-
 import { AcademicsPage, ExamsPage } from "./pages/AcademicsModule.jsx";
 import { FinancePage, PaymentPage } from "./pages/FinanceModule.jsx";
 import { LibraryPage, StudentLifePage } from "./pages/LibraryModule.jsx";
-
-import Login from "./pages/Login.jsx";
 import Profile from "./pages/Profile.jsx";
+import Login from "./pages/Login.jsx";
 
-// ⭐ NEW IMPORT
+// ⭐ NEW — Tasks CRUD Page
 import TasksPage from "./pages/Tasks.jsx";
 
+// Helpers
 import { getCurrentUserEmail, getCurrentRole } from "./seedData.js";
 
+
+// ==========================================================
+// PROTECTED ROUTE WRAPPER
+// ==========================================================
 function ProtectedRoute({ children, allowed }) {
   const loggedIn = localStorage.getItem("loggedIn") === "true";
   const currentEmail = getCurrentUserEmail();
 
+  // Not logged in → redirect to login
   if (!loggedIn || !currentEmail) {
     return <Navigate to="/login" replace />;
   }
 
+  // If allowed roles are specified → enforce role check
   if (allowed && allowed.length > 0) {
     const role = getCurrentRole();
     if (!allowed.includes(role)) {
@@ -35,16 +42,26 @@ function ProtectedRoute({ children, allowed }) {
   return children;
 }
 
+
+// ==========================================================
+// ROLE-AWARE DASHBOARD WRAPPER
+// (Currently: student, teacher, admin all use same Dashboard)
+// ==========================================================
 function RoleDashboard() {
-  const role = getCurrentRole();
   return <Dashboard />;
 }
 
+
+// ==========================================================
+// MAIN APP ROUTES
+// ==========================================================
 export default function App() {
   return (
     <Routes>
+      {/* PUBLIC ROUTE */}
       <Route path="/login" element={<Login />} />
 
+      {/* DASHBOARD */}
       <Route
         path="/"
         element={
@@ -56,6 +73,7 @@ export default function App() {
         }
       />
 
+      {/* ACADEMICS */}
       <Route
         path="/academics"
         element={
@@ -78,6 +96,7 @@ export default function App() {
         }
       />
 
+      {/* FINANCE */}
       <Route
         path="/finance"
         element={
@@ -100,6 +119,7 @@ export default function App() {
         }
       />
 
+      {/* CAMPUS MODULE */}
       <Route
         path="/library"
         element={
@@ -122,7 +142,7 @@ export default function App() {
         }
       />
 
-      {/* ⭐ NEW TASKS ROUTE */}
+      {/* ⭐ NEW — TASKS CRUD MODULE */}
       <Route
         path="/tasks"
         element={
@@ -134,6 +154,7 @@ export default function App() {
         }
       />
 
+      {/* PROFILE */}
       <Route
         path="/profile"
         element={
@@ -145,6 +166,7 @@ export default function App() {
         }
       />
 
+      {/* FALLBACK */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

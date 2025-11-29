@@ -12,6 +12,7 @@ export default function Dashboard() {
     if (window.initDashboardCharts) window.initDashboardCharts();
   }, []);
 
+  /* ---------------------- BASICS ---------------------- */
   const profile = getCurrentProfile();
   const erp = getCurrentErpData() || {};
   const role = getCurrentRole();
@@ -24,44 +25,38 @@ export default function Dashboard() {
   const isAdmin = role === "admin";
 
   /* ---------------------- STUDENT ---------------------- */
-  const studentAcademics =
-    erp.academics || {
-      gpa: 8.7,
-      overallAttendance: 92,
-      semester: "III - CSE",
-      courses: [
-        { code: "CSE201", name: "Data Structures", attendance: 95, marks: 88 },
-        { code: "CSE203", name: "Operating Systems", attendance: 90, marks: 82 },
-        { code: "CSE205", name: "DBMS", attendance: 91, marks: 85 },
-      ],
-    };
+  const studentAcademics = erp.academics || {
+    gpa: 8.7,
+    overallAttendance: 92,
+    semester: "III - CSE",
+    courses: [
+      { code: "CSE201", name: "Data Structures", attendance: 95, marks: 88 },
+      { code: "CSE203", name: "Operating Systems", attendance: 90, marks: 82 },
+      { code: "CSE205", name: "DBMS", attendance: 91, marks: 85 },
+    ],
+  };
 
-  const studentFinance =
-    erp.finance || {
-      total: 110000,
-      paid: 65000,
-      pending: 45000,
-      nextDueDate: "10 Oct 2025",
-    };
+  const studentFinance = erp.finance || {
+    pending: 45000,
+    nextDueDate: "10 Oct 2025",
+  };
 
-  const studentLibrary =
-    erp.library || {
-      borrowed: [
-        { title: "Algorithms Unlocked", due: "28 Sept" },
-        { title: "AI Basics", due: "02 Oct" },
-      ],
-      ebooksCount: 12,
-    };
+  const studentLibrary = erp.library || {
+    borrowed: [
+      { title: "Algorithms Unlocked", due: "28 Sept" },
+      { title: "AI Basics", due: "02 Oct" },
+    ],
+    ebooksCount: 12,
+  };
 
-  const studentLife =
-    erp.studentLife || {
-      clubs: ["Coding Club", "Robotics Club"],
-      upcomingEvents: [
-        { name: "Hackathon 2.0", date: "01 Oct" },
-        { name: "Drama Night", date: "03 Oct" },
-      ],
-      workshops: [{ name: "AI Workshop", date: "05 Oct" }],
-    };
+  const studentLife = erp.studentLife || {
+    clubs: ["Coding Club", "Robotics Club"],
+    upcomingEvents: [
+      { name: "Hackathon 2.0", date: "01 Oct" },
+      { name: "Drama Night", date: "03 Oct" },
+    ],
+    workshops: [{ name: "AI Workshop", date: "05 Oct" }],
+  };
 
   const todaySchedule = [
     { time: "09:00–09:50", subject: "Data Structures", room: "C-302", type: "Lecture" },
@@ -74,20 +69,18 @@ export default function Dashboard() {
   ];
 
   /* ---------------------- TEACHER ---------------------- */
-  const teacherAcademics =
-    erp.academics || {
-      coursesHandled: [
-        { code: "CSE201", name: "Data Structures", students: 62 },
-        { code: "CSE305", name: "Algorithms", students: 48 },
-      ],
-      pendingEvaluations: 3,
-    };
+  const teacherAcademics = erp.academics || {
+    coursesHandled: [
+      { code: "CSE201", name: "Data Structures", students: 62 },
+      { code: "CSE305", name: "Algorithms", students: 48 },
+    ],
+    pendingEvaluations: 3,
+  };
 
-  const teacherLibrary =
-    erp.library || {
-      borrowed: [{ title: "Research in Algorithms", due: "10 Oct" }],
-      ebooksCount: 32,
-    };
+  const teacherLibrary = erp.library || {
+    borrowed: [{ title: "Research in Algorithms", due: "10 Oct" }],
+    ebooksCount: 32,
+  };
 
   const teacherToday = [
     { time: "09:00–09:50", course: "CSE201 · Data Structures", room: "C-302", type: "Lecture" },
@@ -100,28 +93,25 @@ export default function Dashboard() {
   ];
 
   /* ---------------------- ADMIN ---------------------- */
-  const adminOverview =
-    erp.overview || {
-      totalStudents: 1350,
-      totalTeachers: 92,
-      activeCourses: 72,
-      departments: 10,
-    };
+  const adminOverview = erp.overview || {
+    totalStudents: 1350,
+    totalTeachers: 92,
+    activeCourses: 72,
+    departments: 10,
+  };
 
-  const adminFinance =
-    erp.finance || {
-      totalCollected: 82000000,
-      totalPending: 9500000,
-      scholarshipsCount: 410,
-    };
+  const adminFinance = erp.finance || {
+    totalCollected: 82000000,
+    totalPending: 9500000,
+    scholarshipsCount: 410,
+  };
 
-  const adminAcademicStats =
-    erp.academics || {
-      averageGPA: 8.2,
-      averageAttendance: 88,
-      topDept: "CSE (AI & ML)",
-      atRiskCount: 64,
-    };
+  const adminAcademicStats = erp.academics || {
+    averageGPA: 8.2,
+    averageAttendance: 88,
+    topDept: "CSE (AI & ML)",
+    atRiskCount: 64,
+  };
 
   const adminAlerts = [
     { type: "Finance", text: "Fee reminders pending for 3rd year.", severity: "medium" },
@@ -129,21 +119,19 @@ export default function Dashboard() {
     { type: "System", text: "Nightly backup completed.", severity: "low" },
   ];
 
-  const renderHeroSubtitle = () =>
-    isStudent
-      ? "Overview of your academics, fees, and campus activity."
-      : isTeacher
-      ? "Snapshot of your classes, evaluations, and resources."
-      : isAdmin
-      ? "Campus-wide snapshot of academics and finance."
-      : "Unified ERP overview.";
+  const renderHeroSubtitle = () => {
+    if (isStudent) return "Overview of your academics, fees, and campus activity.";
+    if (isTeacher) return "Snapshot of your classes, evaluations, and resources.";
+    if (isAdmin) return "Campus-wide snapshot of academics and finance.";
+    return "Unified ERP overview.";
+  };
 
   /* ======================================================
-                        RENDER UI
+                      RENDER UI
   ======================================================= */
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* ---------------------- HEADER ---------------------- */}
       <section className="rounded-2xl bg-gradient-to-r from-indigo-600 via-sky-500 to-emerald-500 text-white p-5 shadow-md">
         <div className="flex flex-col sm:flex-row justify-between gap-4">
           <div>
@@ -152,11 +140,13 @@ export default function Dashboard() {
               {isTeacher && "Faculty dashboard"}
               {isAdmin && "Admin overview"}
             </p>
+
             <h1 className="text-2xl sm:text-3xl font-semibold">
               {isStudent && `Welcome back, ${firstName} 👋`}
               {isTeacher && `Good to see you, Dr. ${firstName}`}
               {isAdmin && "ERP Control Center"}
             </h1>
+
             <p className="mt-1 text-xs text-indigo-50/90">{renderHeroSubtitle()}</p>
           </div>
 
@@ -177,9 +167,9 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* Stats Cards */}
+      {/* ---------------------- TOP STATS ---------------------- */}
       <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {/* Card 1 */}
+        {/* Student / Teacher / Admin cards are identical logic compressed */}
         <div className="card animate-fade-in-up">
           {isStudent && (
             <>
@@ -210,7 +200,6 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Card 2 */}
         <div className="card animate-fade-in-up">
           {isStudent && (
             <>
@@ -223,10 +212,7 @@ export default function Dashboard() {
             <>
               <p className="text-[11px] text-emerald-600 font-semibold">Total students</p>
               <p className="text-3xl font-bold">
-                {teacherAcademics.coursesHandled.reduce(
-                  (a, c) => a + c.students,
-                  0
-                )}
+                {teacherAcademics.coursesHandled.reduce((sum, c) => sum + c.students, 0)}
               </p>
             </>
           )}
@@ -239,7 +225,6 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Card 3 */}
         <div className="card animate-fade-in-up">
           {isStudent && (
             <>
@@ -267,7 +252,6 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Card 4 */}
         <div className="card animate-fade-in-up">
           {isStudent && (
             <>
@@ -292,7 +276,7 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* Chart + Today */}
+      {/* ---------------------- CHART + TODAY ---------------------- */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="card lg:col-span-2">
           <h2 className="text-sm font-semibold mb-3">Performance trend</h2>
@@ -346,9 +330,9 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* Bottom Section */}
+      {/* ---------------------- BOTTOM GRID ---------------------- */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Left */}
+        {/* Left: academic items / tasks */}
         <div className="card lg:col-span-2">
           {isStudent && (
             <>
@@ -397,11 +381,12 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Right */}
+        {/* Right: clubs / extra */}
         <div className="card">
           {isStudent && (
             <>
               <h2 className="text-sm font-semibold mb-2">Campus activity</h2>
+
               <p className="text-[11px] uppercase mb-1">Clubs</p>
               <div className="flex flex-wrap gap-1.5 mb-3">
                 {studentLife.clubs.map((c, i) => (
@@ -441,9 +426,15 @@ export default function Dashboard() {
             <>
               <h2 className="text-sm font-semibold mb-2">Quick links</h2>
               <ul className="text-xs space-y-2">
-                <li><span className="bg-indigo-50 px-2 py-1 rounded-full">Fee defaulters</span></li>
-                <li><span className="bg-emerald-50 px-2 py-1 rounded-full">Academic summary</span></li>
-                <li><span className="bg-amber-50 px-2 py-1 rounded-full">Notification rules</span></li>
+                <li>
+                  <span className="bg-indigo-50 px-2 py-1 rounded-full">Fee defaulters</span>
+                </li>
+                <li>
+                  <span className="bg-emerald-50 px-2 py-1 rounded-full">Academic summary</span>
+                </li>
+                <li>
+                  <span className="bg-amber-50 px-2 py-1 rounded-full">Notification rules</span>
+                </li>
               </ul>
             </>
           )}
