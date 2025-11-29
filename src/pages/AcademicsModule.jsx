@@ -1,125 +1,163 @@
+// src/pages/AcademicsModule.jsx
 import React, { useEffect } from "react";
 import { getCurrentErpData, getCurrentRole } from "../seedData";
 
-/* ============================
-   📘 ACADEMICS PAGE
-=============================== */
+/* ============================================
+   📘 ACADEMICS — NeoGlass OS Edition
+============================================ */
 export function AcademicsPage() {
-  useEffect(() => {
-    if (window.initAttendanceChart) window.initAttendanceChart();
-    if (window.initMarksChart) window.initMarksChart();
-  }, []);
-
   const erp = getCurrentErpData() || {};
   const role = getCurrentRole();
-
   const isStudent = role === "student";
   const isTeacher = role === "teacher";
 
-  const studentAcademics = erp.academics || {
-    gpa: 8.5,
-    overallAttendance: 90,
-    courses: [
-      { code: "CSE201", name: "Data Structures", attendance: 95, marks: 88 },
-      { code: "CSE203", name: "Operating Systems", attendance: 90, marks: 82 },
-      { code: "CSE205", name: "DBMS", attendance: 91, marks: 85 },
-    ],
-  };
+  const student = erp.academics || {};
+  const teacher = erp.academics || {};
 
-  const teacherAcademics = erp.academics || {
-    coursesHandled: [
-      { code: "CSE201", name: "Data Structures", students: 62 },
-      { code: "CSE305", name: "Advanced Algorithms", students: 48 },
-    ],
-    pendingEvaluations: 3,
-  };
+  // charts
+  useEffect(() => {
+    if (window.initAcademicsCharts) window.initAcademicsCharts(student);
+  }, [student]);
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-semibold">Academics</h1>
+    <div className="space-y-6">
+      {/* HEADER */}
+      <section className="rounded-xl bg-gradient-to-r from-indigo-600 via-sky-500 to-emerald-500 text-white p-5 shadow-md">
+        <h1 className="text-xl sm:text-2xl font-semibold">Academics</h1>
+        <p className="text-indigo-50 text-xs mt-1">
+          {isStudent
+            ? "Track your academic metrics, trends, and course performance."
+            : "Overview of courses handled, evaluations, and class trends."}
+        </p>
+      </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Attendance */}
-        <div className="card animate-fade-in-up">
-          <h3 className="font-semibold mb-2 text-gray-700">Attendance</h3>
-          <canvas id="attendanceChart"></canvas>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* ATTENDANCE TREND */}
+        <div className="card lg:col-span-2 animate-fade-in-up">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold">Attendance Trend</h2>
+            <span className="text-[11px] text-slate-500">
+              90-day line chart
+            </span>
+          </div>
+          <canvas id="academicsAttendanceChart" height="120"></canvas>
         </div>
 
-        {/* Marks */}
+        {/* PERFORMANCE BAR CHART */}
         <div className="card animate-fade-in-up">
-          <h3 className="font-semibold mb-2 text-gray-700">Marks</h3>
-          <canvas id="marksChart"></canvas>
-        </div>
-
-        {/* Courses */}
-        <div className="card animate-fade-in-up">
-          <h3 className="font-semibold mb-2 text-gray-700">
-            {isTeacher ? "Courses Handled" : "Courses"}
-          </h3>
-
-          {isTeacher ? (
-            <ul className="text-sm text-gray-600 space-y-1">
-              {teacherAcademics.coursesHandled?.map((c) => (
-                <li key={c.code} className="flex justify-between">
-                  <span>{c.code} · {c.name}</span>
-                  <span className="text-xs text-gray-500">{c.students} students</span>
-                </li>
-              ))}
-              <li className="text-xs text-red-500 mt-2">
-                Pending evaluations: {teacherAcademics.pendingEvaluations}
-              </li>
-            </ul>
-          ) : (
-            <ul className="text-sm text-gray-600 space-y-1">
-              {studentAcademics.courses?.map((course) => (
-                <li key={course.code} className="flex justify-between">
-                  <span>{course.code} · {course.name}</span>
-                  <span className="text-xs text-gray-500">
-                    {course.attendance}% · {course.marks}%
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold">Marks Overview</h2>
+            <span className="text-[11px] text-slate-500">
+              Subject-wise marks
+            </span>
+          </div>
+          <canvas id="academicsMarksChart" height="120"></canvas>
         </div>
       </div>
 
+      {/* COURSES */}
+      <section className="card animate-fade-in-up">
+        <h2 className="text-sm font-semibold mb-3">
+          {isTeacher ? "Courses Handled" : "Your Courses"}
+        </h2>
+
+        {!isTeacher ? (
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-xs border-separate border-spacing-y-1">
+              <thead className="uppercase text-[11px] text-slate-500">
+                <tr>
+                  <th className="px-2 py-1">Code</th>
+                  <th className="px-2 py-1">Subject</th>
+                  <th className="px-2 py-1">Attendance</th>
+                  <th className="px-2 py-1">Marks</th>
+                </tr>
+              </thead>
+              <tbody>
+                {student.courses?.map((c, i) => (
+                  <tr
+                    key={i}
+                    className="bg-slate-50 hover:bg-slate-100 transition"
+                  >
+                    <td className="px-2 py-1 font-semibold">{c.code}</td>
+                    <td className="px-2 py-1">{c.name}</td>
+                    <td className="px-2 py-1">{c.attendance}%</td>
+                    <td className="px-2 py-1">{c.marks.final ?? c.marks}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <ul className="space-y-2 text-xs">
+            {teacher.coursesHandled?.map((c, i) => (
+                <li
+                    key={i}
+                    className="flex justify-between rounded-lg bg-slate-50 px-3 py-2"
+                >
+                    <span>
+                        {c.code} · {c.name}
+                    </span>
+                <span className="text-slate-600">{c.students} students</span>
+            </li>
+        ))}
+        <p className="text-[11px] text-rose-600 mt-2">
+            Pending evaluations: {teacher.pendingEvaluations}
+        </p>
+    </ul>
+        )}
+      </section>
+
+      {/* SEMESTER SUMMARY */}
       {isStudent && (
-        <div className="card animate-fade-in-up">
-          <h3 className="font-semibold mb-2">Semester Summary</h3>
-          <p className="text-sm text-gray-600">
-            GPA: <b>{studentAcademics.gpa}</b> · Attendance: <b>{studentAcademics.overallAttendance}%</b>
+        <section className="card animate-fade-in-up">
+          <h2 className="text-sm font-semibold mb-2">
+            Semester Summary
+          </h2>
+          <p className="text-xs text-slate-600">
+            GPA:{" "}
+            <span className="font-bold text-indigo-700">
+              {student.gpa}
+            </span>{" "}
+            · Attendance:{" "}
+            <span className="font-bold text-emerald-700">
+              {student.overallAttendance}%
+            </span>
           </p>
-        </div>
+        </section>
       )}
     </div>
   );
 }
 
-
-/* ============================
-   📝 EXAMS PAGE
-=============================== */
+/* ============================================
+   📝 EXAMS — NeoGlass OS Edition
+============================================ */
 export function ExamsPage() {
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-semibold">Exams</h1>
+    <div className="space-y-6">
+      <section className="rounded-xl bg-gradient-to-r from-indigo-600 via-sky-500 to-emerald-500 text-white p-5 shadow-md">
+        <h1 className="text-xl sm:text-2xl font-semibold">Exams & Results</h1>
+        <p className="text-indigo-50 text-xs mt-1">
+          Upcoming assessments and detailed performance summary.
+        </p>
+      </section>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Upcoming */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="card">
           <h3 className="font-semibold mb-2">Upcoming Exams</h3>
-          <ul>
-            <li>Data Structures – 25th Sept</li>
-            <li>DBMS – 28th Sept</li>
+          <ul className="text-xs space-y-1">
+            <li>DSA Mid-2 — 25 Sept</li>
+            <li>DBMS Lab Test — 28 Sept</li>
+            <li>OS End-Lab — 02 Oct</li>
           </ul>
         </div>
 
-        {/* Results */}
         <div className="card">
-          <h3 className="font-semibold mb-2">Results</h3>
-          <p>Last Semester GPA: <strong>8.5</strong></p>
-          <button className="mt-3 py-2 bg-indigo-600 text-white rounded">
+          <h3 className="font-semibold mb-2">Previous Semester</h3>
+          <p className="text-xs">
+            GPA: <b>8.7</b>
+          </p>
+          <button className="mt-3 px-4 py-2 bg-indigo-600 text-white rounded text-xs">
             Download Report
           </button>
         </div>

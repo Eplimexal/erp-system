@@ -1,3 +1,4 @@
+// src/App.jsx
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "./components/layout/MainLayout.jsx";
@@ -88,7 +89,7 @@ export default function App() {
       <Route
         path="/academics"
         element={
-          <ProtectedRoute allowed={["student"]}>
+          <ProtectedRoute allowed={["student", "teacher"]}>
             <MainLayout>
               <AcademicsPage />
             </MainLayout>
@@ -99,7 +100,7 @@ export default function App() {
       <Route
         path="/exams"
         element={
-          <ProtectedRoute allowed={["student"]}>
+          <ProtectedRoute allowed={["student", "teacher"]}>
             <MainLayout>
               <ExamsPage />
             </MainLayout>
@@ -111,7 +112,7 @@ export default function App() {
       <Route
         path="/finance"
         element={
-          <ProtectedRoute allowed={["student"]}>
+          <ProtectedRoute allowed={["student", "teacher", "admin"]}>
             <MainLayout>
               <FinancePage />
             </MainLayout>
@@ -134,7 +135,7 @@ export default function App() {
       <Route
         path="/library"
         element={
-          <ProtectedRoute allowed={["student"]}>
+          <ProtectedRoute allowed={["student", "teacher"]}>
             <MainLayout>
               <LibraryPage />
             </MainLayout>
@@ -145,7 +146,7 @@ export default function App() {
       <Route
         path="/studentlife"
         element={
-          <ProtectedRoute allowed={["student"]}>
+          <ProtectedRoute allowed={["student", "teacher"]}>
             <MainLayout>
               <StudentLifePage />
             </MainLayout>
