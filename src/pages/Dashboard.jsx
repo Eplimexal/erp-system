@@ -10,6 +10,7 @@ import {
 export default function Dashboard() {
   useEffect(() => {
     if (window.initDashboardCharts) window.initDashboardCharts();
+    if (window.initTeacherDashboardCharts) window.initTeacherDashboardCharts();
   }, []);
 
   /* ---------------------- BASICS ---------------------- */
@@ -18,6 +19,8 @@ export default function Dashboard() {
   const role = getCurrentRole();
 
   const name = profile?.name || "User";
+  const department = profile?.department || "Faculty";
+
   const firstName = name.split(" ")[0];
 
   const isStudent = role === "student";
@@ -41,26 +44,17 @@ export default function Dashboard() {
     nextDueDate: "10 Oct 2025",
   };
 
-  const studentLibrary = erp.library || {
-    borrowed: [
-      { title: "Algorithms Unlocked", due: "28 Sept" },
-      { title: "AI Basics", due: "02 Oct" },
-    ],
-    ebooksCount: 12,
-  };
-
   const studentLife = erp.studentLife || {
     clubs: ["Coding Club", "Robotics Club"],
     upcomingEvents: [
       { name: "Hackathon 2.0", date: "01 Oct" },
       { name: "Drama Night", date: "03 Oct" },
     ],
-    workshops: [{ name: "AI Workshop", date: "05 Oct" }],
   };
 
   const todaySchedule = [
-    { time: "09:00–09:50", subject: "Data Structures", room: "C-302", type: "Lecture" },
-    { time: "10:00–10:50", subject: "DBMS Lab", room: "Lab-5", type: "Lab" },
+    { time: "09:00–09:50", subject: "Data Structures", room: "C-302" },
+    { time: "10:00–10:50", subject: "DBMS Lab", room: "Lab-5" },
   ];
 
   const upcomingAssessments = [
@@ -69,7 +63,7 @@ export default function Dashboard() {
   ];
 
   /* ---------------------- TEACHER ---------------------- */
-  const teacherAcademics = erp.academics || {
+  const teacherAcademics = erp.teacherAcademics || {
     coursesHandled: [
       { code: "CSE201", name: "Data Structures", students: 62 },
       { code: "CSE305", name: "Algorithms", students: 48 },
@@ -77,19 +71,32 @@ export default function Dashboard() {
     pendingEvaluations: 3,
   };
 
-  const teacherLibrary = erp.library || {
-    borrowed: [{ title: "Research in Algorithms", due: "10 Oct" }],
-    ebooksCount: 32,
-  };
-
   const teacherToday = [
-    { time: "09:00–09:50", course: "CSE201 · Data Structures", room: "C-302", type: "Lecture" },
-    { time: "11:00–12:00", course: "CSE305 · Algorithms", room: "Lab-3", type: "Lab" },
+    {
+      time: "09:00–09:50",
+      course: "CSE201 · Data Structures",
+      room: "C-302",
+    },
+    {
+      time: "11:00–12:00",
+      course: "CSE305 · Algorithms",
+      room: "Lab-3",
+    },
   ];
 
   const teacherTasks = [
-    { label: "Evaluate DS Quiz 3", course: "CSE201", due: "28 Sept", items: "62 scripts" },
-    { label: "Upload midterm marks", course: "CSE305", due: "02 Oct", items: "48 students" },
+    {
+      label: "Evaluate DS Quiz 3",
+      course: "CSE201",
+      due: "28 Sept",
+      items: "62 scripts",
+    },
+    {
+      label: "Upload midterm marks",
+      course: "CSE305",
+      due: "02 Oct",
+      items: "48 students",
+    },
   ];
 
   /* ---------------------- ADMIN ---------------------- */
@@ -100,12 +107,6 @@ export default function Dashboard() {
     departments: 10,
   };
 
-  const adminFinance = erp.finance || {
-    totalCollected: 82000000,
-    totalPending: 9500000,
-    scholarshipsCount: 410,
-  };
-
   const adminAcademicStats = erp.academics || {
     averageGPA: 8.2,
     averageAttendance: 88,
@@ -114,14 +115,25 @@ export default function Dashboard() {
   };
 
   const adminAlerts = [
-    { type: "Finance", text: "Fee reminders pending for 3rd year.", severity: "medium" },
-    { type: "Academics", text: "Attendance below 65% for 12 students.", severity: "high" },
+    {
+      type: "Finance",
+      text: "Fee reminders pending for 3rd year.",
+      severity: "medium",
+    },
+    {
+      type: "Academics",
+      text: "Attendance below 65% for 12 students.",
+      severity: "high",
+    },
     { type: "System", text: "Nightly backup completed.", severity: "low" },
   ];
 
+  /* ---------------------- HERO SUBTITLE ---------------------- */
   const renderHeroSubtitle = () => {
-    if (isStudent) return "Overview of your academics, fees, and campus activity.";
-    if (isTeacher) return "Snapshot of your classes, evaluations, and resources.";
+    if (isStudent)
+      return "Overview of your academics, fees, and campus activity.";
+    if (isTeacher)
+      return `Teaching overview for the ${department} department.`;
     if (isAdmin) return "Campus-wide snapshot of academics and finance.";
     return "Unified ERP overview.";
   };
@@ -136,20 +148,22 @@ export default function Dashboard() {
         <div className="flex flex-col sm:flex-row justify-between gap-4">
           <div>
             <p className="text-xs uppercase opacity-80 mb-1">
-              {isStudent && "Student dashboard"}
-              {isTeacher && "Faculty dashboard"}
-              {isAdmin && "Admin overview"}
+              {isStudent && "Student Dashboard"}
+              {isTeacher && "Faculty Dashboard"}
+              {isAdmin && "Admin Overview"}
             </p>
 
             <h1 className="text-2xl sm:text-3xl font-semibold">
               {isStudent && `Welcome back, ${firstName} 👋`}
-              {isTeacher && `Good to see you, ${firstName}`}
+              {isTeacher &&
+                `Welcome back, Dr. ${firstName} — Department of ${department}`}
               {isAdmin && "ERP Control Center"}
             </h1>
 
             <p className="mt-1 text-xs text-indigo-50/90">{renderHeroSubtitle()}</p>
           </div>
 
+          {/* STUDENT ONLY */}
           {isStudent && (
             <div className="flex flex-col items-end gap-2">
               <Link
@@ -159,8 +173,8 @@ export default function Dashboard() {
                 Pay fees online
               </Link>
               <span className="text-[11px] text-indigo-50/90">
-                Pending: ₹{studentFinance.pending.toLocaleString("en-IN")} · next due{" "}
-                {studentFinance.nextDueDate}
+                Pending: ₹{studentFinance.pending.toLocaleString("en-IN")} · Next
+                due {studentFinance.nextDueDate}
               </span>
             </div>
           )}
@@ -169,66 +183,87 @@ export default function Dashboard() {
 
       {/* ---------------------- TOP STATS ---------------------- */}
       <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {/* Student / Teacher / Admin cards are identical logic compressed */}
+        {/* Card 1 */}
         <div className="card animate-fade-in-up">
           {isStudent && (
             <>
               <p className="text-[11px] font-semibold text-indigo-600">CGPA</p>
               <p className="text-3xl font-bold">{studentAcademics.gpa}</p>
-              <p className="mt-1 text-xs">Semester: {studentAcademics.semester}</p>
             </>
           )}
 
           {isTeacher && (
             <>
-              <p className="text-[11px] font-semibold text-indigo-600">Courses handled</p>
+              <p className="text-[11px] font-semibold text-indigo-600">
+                Courses Handled
+              </p>
               <p className="text-3xl font-bold">
                 {teacherAcademics.coursesHandled.length}
               </p>
-              <p className="mt-1 text-xs">
-                Pending: {teacherAcademics.pendingEvaluations}
+              <p className="text-xs mt-1">
+                Pending Evaluations: {teacherAcademics.pendingEvaluations}
               </p>
             </>
           )}
 
           {isAdmin && (
             <>
-              <p className="text-[11px] font-semibold text-indigo-600">Total students</p>
-              <p className="text-3xl font-bold">{adminOverview.totalStudents}</p>
-              <p className="mt-1 text-xs">Departments: {adminOverview.departments}</p>
+              <p className="text-[11px] text-indigo-600 font-semibold">
+                Total Students
+              </p>
+              <p className="text-3xl font-bold">
+                {adminOverview.totalStudents}
+              </p>
             </>
           )}
         </div>
 
+        {/* Card 2 */}
         <div className="card animate-fade-in-up">
           {isStudent && (
             <>
-              <p className="text-[11px] text-emerald-600 font-semibold">Attendance</p>
-              <p className="text-3xl font-bold">{studentAcademics.overallAttendance}%</p>
+              <p className="text-[11px] text-emerald-600 font-semibold">
+                Attendance
+              </p>
+              <p className="text-3xl font-bold">
+                {studentAcademics.overallAttendance}%
+              </p>
             </>
           )}
 
           {isTeacher && (
             <>
-              <p className="text-[11px] text-emerald-600 font-semibold">Total students</p>
+              <p className="text-[11px] text-emerald-600 font-semibold">
+                Total Students
+              </p>
               <p className="text-3xl font-bold">
-                {teacherAcademics.coursesHandled.reduce((sum, c) => sum + c.students, 0)}
+                {teacherAcademics.coursesHandled.reduce(
+                  (sum, c) => sum + c.students,
+                  0
+                )}
               </p>
             </>
           )}
 
           {isAdmin && (
             <>
-              <p className="text-[11px] text-emerald-600 font-semibold">Average GPA</p>
-              <p className="text-3xl font-bold">{adminAcademicStats.averageGPA}</p>
+              <p className="text-[11px] text-emerald-600 font-semibold">
+                Average GPA
+              </p>
+              <p className="text-3xl font-bold">
+                {adminAcademicStats.averageGPA}
+              </p>
             </>
           )}
         </div>
 
+        {/* Card 3 */}
         <div className="card animate-fade-in-up">
           {isStudent && (
             <>
-              <p className="text-[11px] text-amber-600 font-semibold">Fee status</p>
+              <p className="text-[11px] text-amber-600 font-semibold">
+                Fee Status
+              </p>
               <p className="text-3xl font-bold">
                 ₹{studentFinance.pending.toLocaleString("en-IN")}
               </p>
@@ -237,55 +272,86 @@ export default function Dashboard() {
 
           {isTeacher && (
             <>
-              <p className="text-[11px] text-amber-600 font-semibold">E-books</p>
-              <p className="text-3xl font-bold">{teacherLibrary.ebooksCount}</p>
+              <p className="text-[11px] text-amber-600 font-semibold">
+                Evaluations Pending
+              </p>
+              <p className="text-3xl font-bold">
+                {teacherAcademics.pendingEvaluations}
+              </p>
             </>
           )}
 
           {isAdmin && (
             <>
-              <p className="text-[11px] text-amber-600 font-semibold">Fee collections</p>
-              <p className="text-3xl font-bold">
-                ₹{adminFinance.totalCollected.toLocaleString("en-IN")}
+              <p className="text-[11px] text-amber-600 font-semibold">
+                Collections
               </p>
+              <p className="text-3xl font-bold">₹82,000,000</p>
             </>
           )}
         </div>
 
+        {/* Card 4 */}
         <div className="card animate-fade-in-up">
           {isStudent && (
             <>
               <p className="text-[11px] text-sky-600 font-semibold">Courses</p>
-              <p className="text-3xl font-bold">{studentAcademics.courses.length}</p>
+              <p className="text-3xl font-bold">
+                {studentAcademics.courses.length}
+              </p>
             </>
           )}
 
           {isTeacher && (
             <>
-              <p className="text-[11px] text-sky-600 font-semibold">Sessions today</p>
+              <p className="text-[11px] text-sky-600 font-semibold">
+                Sessions Today
+              </p>
               <p className="text-3xl font-bold">{teacherToday.length}</p>
             </>
           )}
 
           {isAdmin && (
             <>
-              <p className="text-[11px] text-sky-600 font-semibold">Active courses</p>
-              <p className="text-3xl font-bold">{adminOverview.activeCourses}</p>
+              <p className="text-[11px] font-semibold text-sky-600">
+                Active Courses
+              </p>
+              <p className="text-3xl font-bold">
+                {adminOverview.activeCourses}
+              </p>
             </>
           )}
         </div>
       </section>
 
-      {/* ---------------------- CHART + TODAY ---------------------- */}
+      {/* ---------------------- TEACHER TODAY + CHART ---------------------- */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Performance Chart */}
         <div className="card lg:col-span-2">
-          <h2 className="text-sm font-semibold mb-3">Performance trend</h2>
+          <h2 className="text-sm font-semibold mb-3">Performance Trend</h2>
           <div className="h-64">
-            <canvas id="dashboardPerformanceChart"></canvas>
+            <canvas id="dashboardPerformanceChart" />
           </div>
         </div>
 
+        {/* Teacher Today */}
         <div className="card">
+          {isTeacher && (
+            <>
+              <h2 className="text-sm font-semibold mb-2">Today's Sessions</h2>
+              <ul className="text-xs space-y-2">
+                {teacherToday.map((t, i) => (
+                  <li key={i} className="bg-slate-50 px-3 py-2 rounded-lg">
+                    <p className="font-semibold">{t.course}</p>
+                    <p className="text-[11px]">
+                      {t.time} · {t.room}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
           {isStudent && (
             <>
               <h2 className="text-sm font-semibold mb-2">Today</h2>
@@ -300,26 +366,12 @@ export default function Dashboard() {
             </>
           )}
 
-          {isTeacher && (
-            <>
-              <h2 className="text-sm font-semibold mb-2">Today&apos;s sessions</h2>
-              <ul className="text-xs space-y-2">
-                {teacherToday.map((s, i) => (
-                  <li key={i} className="bg-slate-50 px-3 py-2 rounded-lg">
-                    <p className="font-semibold">{s.course}</p>
-                    <p className="text-[11px]">{s.time} · {s.room}</p>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-
           {isAdmin && (
             <>
-              <h2 className="text-sm font-semibold mb-2">System alerts</h2>
+              <h2 className="text-sm font-semibold mb-2">System Alerts</h2>
               <ul className="text-xs space-y-2">
                 {adminAlerts.map((a, i) => (
-                  <li key={i} className="px-3 py-2 rounded-lg bg-slate-50">
+                  <li key={i} className="bg-slate-50 px-3 py-2 rounded-lg">
                     <p className="text-[10px] uppercase">{a.type}</p>
                     <p className="text-[11px]">{a.text}</p>
                   </li>
@@ -332,11 +384,28 @@ export default function Dashboard() {
 
       {/* ---------------------- BOTTOM GRID ---------------------- */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Left: academic items / tasks */}
+        {/* LEFT PANEL */}
         <div className="card lg:col-span-2">
+          {isTeacher && (
+            <>
+              <h2 className="text-sm font-semibold mb-2">Pending Tasks</h2>
+              <ul className="text-xs space-y-2">
+                {teacherTasks.map((t, i) => (
+                  <li key={i} className="bg-slate-50 px-3 py-2 rounded-lg flex justify-between">
+                    <div>
+                      <p className="font-semibold">{t.label}</p>
+                      <p className="text-[11px]">{t.course} · {t.items}</p>
+                    </div>
+                    <span className="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">{t.due}</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
           {isStudent && (
             <>
-              <h2 className="text-sm font-semibold mb-2">Upcoming items</h2>
+              <h2 className="text-sm font-semibold mb-2">Upcoming Items</h2>
               <table className="text-xs w-full">
                 <tbody>
                   {upcomingAssessments.map((a, i) => (
@@ -352,24 +421,10 @@ export default function Dashboard() {
             </>
           )}
 
-          {isTeacher && (
-            <>
-              <h2 className="text-sm font-semibold mb-2">Pending tasks</h2>
-              <ul className="text-xs space-y-2">
-                {teacherTasks.map((t, i) => (
-                  <li key={i} className="bg-slate-50 px-3 py-2 rounded-lg">
-                    <p className="font-semibold">{t.label}</p>
-                    <p className="text-[11px]">{t.course} · {t.items}</p>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-
           {isAdmin && (
             <>
-              <h2 className="text-sm font-semibold mb-2">Academic overview</h2>
-              <ul className="grid text-xs space-y-1">
+              <h2 className="text-sm font-semibold mb-2">Academic Overview</h2>
+              <ul className="text-xs space-y-1">
                 <li className="bg-slate-50 px-3 py-2 rounded-lg">
                   Top department: {adminAcademicStats.topDept}
                 </li>
@@ -381,37 +436,12 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Right: clubs / extra */}
+        {/* RIGHT PANEL */}
         <div className="card">
-          {isStudent && (
-            <>
-              <h2 className="text-sm font-semibold mb-2">Campus activity</h2>
-
-              <p className="text-[11px] uppercase mb-1">Clubs</p>
-              <div className="flex flex-wrap gap-1.5 mb-3">
-                {studentLife.clubs.map((c, i) => (
-                  <span key={i} className="px-2 py-0.5 text-[11px] bg-indigo-50 text-indigo-700 rounded-full">
-                    {c}
-                  </span>
-                ))}
-              </div>
-
-              <p className="text-[11px] uppercase mb-1">Events</p>
-              <ul className="text-xs space-y-1 mb-3">
-                {studentLife.upcomingEvents.map((e, i) => (
-                  <li key={i} className="flex justify-between">
-                    <span>{e.name}</span>
-                    <span className="text-[11px]">{e.date}</span>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-
           {isTeacher && (
             <>
-              <h2 className="text-sm font-semibold mb-2">Quick teaching snapshot</h2>
-              <ul className="text-xs space-y-1 mb-3">
+              <h2 className="text-sm font-semibold mb-2">Quick Teaching Snapshot</h2>
+              <ul className="text-xs space-y-1">
                 {teacherAcademics.coursesHandled.map((c, i) => (
                   <li key={i} className="bg-slate-50 px-3 py-2 rounded-lg flex justify-between">
                     <span>{c.code} · {c.name}</span>
@@ -422,19 +452,27 @@ export default function Dashboard() {
             </>
           )}
 
+          {isStudent && (
+            <>
+              <h2 className="text-sm font-semibold mb-2">Campus Activity</h2>
+              <p className="text-[11px] uppercase mb-1">Clubs</p>
+              <div className="flex flex-wrap gap-1.5 mb-3">
+                {studentLife.clubs.map((c, i) => (
+                  <span key={i} className="px-2 py-0.5 text-[11px] bg-indigo-50 text-indigo-700 rounded-full">
+                    {c}
+                  </span>
+                ))}
+              </div>
+            </>
+          )}
+
           {isAdmin && (
             <>
-              <h2 className="text-sm font-semibold mb-2">Quick links</h2>
-              <ul className="text-xs space-y-2">
-                <li>
-                  <span className="bg-indigo-50 px-2 py-1 rounded-full">Fee defaulters</span>
-                </li>
-                <li>
-                  <span className="bg-emerald-50 px-2 py-1 rounded-full">Academic summary</span>
-                </li>
-                <li>
-                  <span className="bg-amber-50 px-2 py-1 rounded-full">Notification rules</span>
-                </li>
+              <h2 className="text-sm font-semibold mb-2">Quick Links</h2>
+              <ul className="text-xs">
+                <li className="bg-indigo-50 px-3 py-2 rounded-lg mb-1">Fee Defaulters</li>
+                <li className="bg-emerald-50 px-3 py-2 rounded-lg mb-1">Academic Summary</li>
+                <li className="bg-amber-50 px-3 py-2 rounded-lg">Notification Rules</li>
               </ul>
             </>
           )}

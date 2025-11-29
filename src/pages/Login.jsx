@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fakeApi } from "../utils/fakeApi";
+import ReCAPTCHA from "react-google-recaptcha"; // ← CAPTCHA import
 
 export default function Login() {
   const navigate = useNavigate();
@@ -11,6 +12,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [captchaToken, setCaptchaToken] = useState(null); // ← CAPTCHA state
 
   // Local storage helpers
   const getUsers = () => {
@@ -43,7 +46,13 @@ export default function Login() {
       return;
     }
 
-    // 🔥 Fake API Login Call
+    // 📌 CAPTCHA check
+    if (!captchaToken) {
+      setMessage("Please complete the CAPTCHA.");
+      return;
+    }
+
+    // Fake API call
     setLoading(true);
     await fakeApi("/api/login", { email, password }, "POST");
     setLoading(false);
@@ -100,7 +109,6 @@ export default function Login() {
           </p>
         </div>
 
-        {/* Loading Indicator */}
         {loading && (
           <div className="text-center text-sm text-indigo-600">
             Contacting server…
@@ -116,6 +124,7 @@ export default function Login() {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
           />
+
           <input
             type="password"
             placeholder="Password"
@@ -124,6 +133,15 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
           />
+
+          {/* CAPTCHA */}
+          <div className="flex justify-center">
+            <ReCAPTCHA
+              sitekey= "6LcHPxwsAAAAACpXubNG4j92keLMy6c3a7WsAU40"
+      
+              onChange={(token) => setCaptchaToken(token)}
+            />
+          </div>
 
           {message && (
             <p className="text-sm text-center text-red-500">{message}</p>
@@ -144,7 +162,6 @@ export default function Login() {
 
           <div className="grid grid-cols-1 gap-2">
             <button
-              type="button"
               onClick={() => useDemo("student@klu.edu", "student123")}
               className="w-full px-3 py-2 rounded-lg bg-white hover:bg-indigo-100 border border-indigo-100 flex items-center justify-between text-xs"
             >
@@ -153,7 +170,6 @@ export default function Login() {
             </button>
 
             <button
-              type="button"
               onClick={() => useDemo("teacher@klu.edu", "teacher123")}
               className="w-full px-3 py-2 rounded-lg bg-white hover:bg-indigo-100 border border-indigo-100 flex items-center justify-between text-xs"
             >
@@ -162,7 +178,6 @@ export default function Login() {
             </button>
 
             <button
-              type="button"
               onClick={() => useDemo("admin@klu.edu", "admin123")}
               className="w-full px-3 py-2 rounded-lg bg-white hover:bg-indigo-100 border border-indigo-100 flex items-center justify-between text-xs"
             >
@@ -172,13 +187,11 @@ export default function Login() {
           </div>
         </div>
 
-        {/* MODE TOGGLE */}
         <div className="mt-2 text-center text-sm text-gray-600">
           {mode === "login" ? (
             <>
               Don't have an account?{" "}
               <button
-                type="button"
                 onClick={() => {
                   setMode("signup");
                   setMessage("");
@@ -192,7 +205,6 @@ export default function Login() {
             <>
               Already have an account?{" "}
               <button
-                type="button"
                 onClick={() => {
                   setMode("login");
                   setMessage("");
