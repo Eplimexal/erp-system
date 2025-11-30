@@ -1,7 +1,7 @@
 // src/pages/Login.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fakeApi } from "../utils/fakeApi";
+import { fakeApi } from "../utils/apiClient";
 import ReCAPTCHA from "react-google-recaptcha";
 
 export default function Login() {

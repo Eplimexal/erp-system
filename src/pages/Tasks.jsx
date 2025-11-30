@@ -1,6 +1,6 @@
 // src/pages/Tasks.jsx
 import React, { useEffect, useState } from "react";
-import { fakeApi } from "../utils/fakeApi";
+import { apiClient } from "../utils/apiClient";
 import { getCurrentUserEmail } from "../seedData";
 
 export default function TasksPage() {
@@ -11,6 +11,9 @@ export default function TasksPage() {
   const [newTask, setNewTask] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // -----------------------------
+  // Local Storage Helpers
+  // -----------------------------
   const loadTasks = () => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -25,15 +28,22 @@ export default function TasksPage() {
     setTasks(updated);
   };
 
-  // Load tasks on start (with fake API read)
+  // -----------------------------
+  // Initial Load
+  // -----------------------------
   useEffect(() => {
     setLoading(true);
-    fakeApi("/api/tasks/load", {}, "GET").then(() => {
+
+    // Simulate backend fetch
+    apiClient.request("/tasks", {}, "GET").then(() => {
       setTasks(loadTasks());
       setLoading(false);
     });
   }, []);
 
+  // -----------------------------
+  // CRUD Operations
+  // -----------------------------
   const addTask = async () => {
     if (!newTask.trim()) return;
 
@@ -44,7 +54,7 @@ export default function TasksPage() {
     };
 
     setLoading(true);
-    await fakeApi("/api/tasks/create", task, "POST");
+    await apiClient.request("/tasks", task, "POST");
     setLoading(false);
 
     saveTasks([...tasks, task]);
@@ -57,7 +67,7 @@ export default function TasksPage() {
     );
 
     setLoading(true);
-    await fakeApi("/api/tasks/update", updated, "PUT");
+    await apiClient.request("/tasks", updated, "PUT");
     setLoading(false);
 
     saveTasks(updated);
@@ -65,26 +75,30 @@ export default function TasksPage() {
 
   const deleteTask = async (id) => {
     setLoading(true);
-    await fakeApi("/api/tasks/delete", { id }, "DELETE");
+    await apiClient.request(`/tasks/${id}`, {}, "DELETE");
     setLoading(false);
 
     saveTasks(tasks.filter((t) => t.id !== id));
   };
 
+  // -----------------------------
+  // UI
+  // -----------------------------
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold">Your Tasks</h1>
 
-      {/* Loading indicator */}
+      {/* Loading Indicator */}
       {loading && (
-        <div className="text-sm text-indigo-600">
-          Syncing with server...
+        <div className="text-sm text-indigo-600 animate-pulse">
+          Updating…
         </div>
       )}
 
       {/* Add Task */}
       <div className="card p-4 space-y-3">
         <h3 className="font-semibold text-gray-700">Add new task</h3>
+
         <div className="flex gap-3">
           <input
             value={newTask}
@@ -93,6 +107,7 @@ export default function TasksPage() {
             className="flex-1 px-3 py-2 border rounded-lg"
             placeholder="Enter a note or reminder..."
           />
+
           <button
             onClick={addTask}
             disabled={loading}
@@ -123,9 +138,12 @@ export default function TasksPage() {
                     disabled={loading}
                     onChange={() => toggleDone(task.id)}
                   />
+
                   <span
                     className={`text-sm ${
-                      task.done ? "line-through text-gray-400" : "text-gray-800"
+                      task.done
+                        ? "line-through text-gray-400"
+                        : "text-gray-800"
                     }`}
                   >
                     {task.text}
