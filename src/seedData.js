@@ -55,7 +55,7 @@ const DEMO_PROFILES = {
 
   "teacher@klu.edu": {
     email: "teacher@klu.edu",
-    name: "Dr. Meera Rao",
+    name: "Meera Rao",
     phone: "+91 98765 20202",
     age: "34",
     gender: "female",
